@@ -1,49 +1,49 @@
 
-import { useState } from 'preact/hooks';
+import { useState, useEffect } from 'preact/hooks';
 import { Search, type CollectionSearchResult } from 'astro-collection-search';
 
 import "../search-component.css";
 
 export function SearchComponent({headings=[], contents=[]}) {
 
-  let initial_query = '';
-  let initial_results: CollectionSearchResult[] = [];
-  
-  if (typeof sessionStorage !== 'undefined') {
-    initial_query = sessionStorage.getItem('query') || '';
-    const json = sessionStorage.getItem('results');
-    if (json) {
-      try {
-        initial_results = JSON.parse(json);
-      }
-      catch (err) {
-        console.error(err);
+  useEffect(() => {
+    if (typeof sessionStorage !== 'undefined') {
+      const text = sessionStorage.getItem('query') || '';
+      setQuery(text);
+      const json = sessionStorage.getItem('results');
+      if (json) {
+        try {
+          const results = JSON.parse(json);
+          setList(results);
+        }
+        catch (err) {
+          console.error(err);
+        }
       }
     }
-  }
+  }, []);
 
-  const [list, setList] = useState(initial_results);
-  // const [query, setQuery] = useState(initial_query);
+  const [list, setList] = useState([]);
+  const [query, setQuery] = useState('');
 
   const CreateLink = (result: CollectionSearchResult): string => {
     return '/' + result.collection + '/' + result.file.replace(/\.mdx{0,1}$/, '');
   };
 
-  const HandleKeyUp = async (event: KeyboardEvent): Promise<undefined> => {
+  const HandleInput = async (event: KeyboardEvent): Promise<undefined> => {
     const target = event.target;
     if (target instanceof HTMLInputElement) {
-      const query = target.value.trim();
-      // setQuery(query);
-
-      sessionStorage.setItem('query', query);
-      if (query) {
-        const results = await Search(query);
+      const value = target.value.trim();
+      setQuery(target.value);
+      sessionStorage.setItem('query', value);
+      if (value) {
+        const results = await Search(value);
         sessionStorage.setItem('results', JSON.stringify(results));
         setList(results);
       }
       else {
         sessionStorage.setItem('results', JSON.stringify([]));
-        setList([]);
+        setList(undefined);
       }
     }
   };
@@ -58,16 +58,16 @@ export function SearchComponent({headings=[], contents=[]}) {
         If they're not, you probably need to change the <code>CreateLink</code> method in the search component.
       </p>
 
-      <input placeholder="Search" value={initial_query} onKeyUp={HandleKeyUp} />
+      <input placeholder="Search" value={query} onInput={HandleInput} />
       <div>
 
-        {(list.length === 0) && 
+        {(list?.length === 0) && 
           <div>
             Your search returned no results.
           </div>
         }
 
-        {list.map(result => 
+        {list?.map(result => 
 
           <div className="search-result">
             <h1 class="title"><a href={CreateLink(result)}>{result.frontmatter.title || 'No title'}</a></h1>

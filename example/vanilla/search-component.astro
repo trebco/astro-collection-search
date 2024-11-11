@@ -76,7 +76,7 @@ document.addEventListener('DOMContentLoaded', () => {
   /**
    * run the query on key events
    */
-  input.addEventListener('keyup', async () => {
+  input.addEventListener('input', async () => {
     const query = input.value.trim();
     if (query) {
       const list = await Search(query);
@@ -99,7 +99,10 @@ document.addEventListener('DOMContentLoaded', () => {
     const json = sessionStorage.getItem('results');
     if (json) {
       try {
-        PopulateResults(JSON.parse(json));
+        const list = JSON.parse(json);
+        if (Array.isArray(list) && list.length) {
+          PopulateResults(list);
+        }
       }
       catch (err) {
         console.error(err);
@@ -122,7 +125,7 @@ document.addEventListener('DOMContentLoaded', () => {
   </p>
 
   <!-- input -->
-  <input class="query" placeholder="query">
+  <input class="query" placeholder="Search">
 
   <!-- results list -->
   <div class="results"></div>
