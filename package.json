@@ -1,0 +1,29 @@
+{
+  "name": "astro-collection-search",
+  "license": "MIT",
+  "version": "0.0.2",
+  "main": "src/index.ts",
+  "exports": {
+    ".": "./src/index.ts",
+    "./self": "./src/index.ts",
+    "./example/vanilla": "./example/vanilla/search-component.astro",
+    "./example/preact": "./example/preact/search-component.tsx"
+  },
+  "keywords": [
+    "astro-integration"
+  ],
+  "dependencies": {
+    "minisearch": "^7.1.0"
+  },
+  "devDependencies": {
+    "@types/node": "^22.9.0",
+    "astro": "^4.16.10",
+    "esbuild": "^0.24.0",
+    "typescript": "^5.6.3"
+  },
+  "scripts": {
+    "watch-worker": "esbuild src/search-worker.ts --outfile=dist/minisearch-worker.mjs --bundle --watch",
+    "build-worker-dev": "esbuild src/search-worker.ts --outfile=dist/minisearch-worker.mjs --bundle",
+    "build-worker": "esbuild src/search-worker.ts --outfile=dist/minisearch-worker.mjs --bundle --minify"
+  }
+}
