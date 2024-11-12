@@ -1,12 +1,11 @@
 {
-  "name": "astro-collection-search",
+  "name": "@trebco/astro-collection-search",
   "license": "MIT",
   "version": "0.0.3",
   "repository": {
     "type": "git",
-    "url": "https://github.com/trebco/astro-collection-search"
+    "url": "git+https://github.com/trebco/astro-collection-search.git"
   },
-  "main": "src/index.ts",
   "exports": {
     ".": "./src/index.ts",
     "./self": "./src/index.ts",
@@ -29,5 +28,10 @@
     "watch-worker": "esbuild src/search-worker.ts --outfile=dist/minisearch-worker.mjs --bundle --watch",
     "build-worker-dev": "esbuild src/search-worker.ts --outfile=dist/minisearch-worker.mjs --bundle",
     "build-worker": "esbuild src/search-worker.ts --outfile=dist/minisearch-worker.mjs --bundle --minify"
-  }
+  },
+  "description": "Collection search for Astro using minisearch",
+  "bugs": {
+    "url": "https://github.com/trebco/astro-collection-search/issues"
+  },
+  "homepage": "https://github.com/trebco/astro-collection-search"
 }

@@ -1,6 +1,6 @@
 
+import { type CollectionSearchResult, Search } from '@trebco/astro-collection-search';
 import { useState, useEffect } from 'preact/hooks';
-import { Search, type CollectionSearchResult } from 'astro-collection-search';
 
 import "../search-component.css";
 

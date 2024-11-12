@@ -21,7 +21,7 @@ astro.config.mjs:
 ```ts
 
 // add import directive
-import collection_search from 'astro-collection-search';
+import collection_search from '@trebco/astro-collection-search';
 
 export default defineConfig({
 
@@ -36,7 +36,7 @@ export default defineConfig({
 ```jsx
 ---
 
-import SearchComponent from 'astro-collection-search/example/vanilla';
+import SearchComponent from '@trebco/astro-collection-search/example/vanilla';
 
 ---
 
@@ -64,7 +64,7 @@ Add an entry in the `integrations` section in `astro.config.mjs`:
 ```ts
 
 // import 
-import collection_search from 'astro-collection-search';
+import collection_search from '@trebco/astro-collection-search';
 
 // ...
 
@@ -110,7 +110,7 @@ call the `Search()` function. Remember that it runs client-side.
 ```jsx
 ---
 
-import SearchComponent from 'astro-collection-search/example/vanilla';
+import SearchComponent from '@trebco/astro-collection-search/example/vanilla';
 
 ---
 
@@ -133,7 +133,7 @@ prevent server-side rendering:
 ```jsx
 ---
 
-import SearchComponent from 'astro-collection-search/example/preact';
+import SearchComponent from '@trebco/astro-collection-search/example/preact';
 
 ---
 
