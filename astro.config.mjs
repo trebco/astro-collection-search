@@ -10,5 +10,6 @@ import collectionSearch from 'astro-collection-search';
 export default defineConfig({
     site: 'https://trebco.github.io',
     base: 'astro-collection-search',
+    outDir: 'docs',
     integrations: [mdx(), sitemap(), collectionSearch()],
 });
