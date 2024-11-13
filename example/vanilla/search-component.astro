@@ -1,12 +1,36 @@
+---
 
+/**
+ * some props used by the demo site. all optional.
+ */
+interface Props {
+
+  /** hide the note */
+  'hide-note'?: boolean;
+
+  /** max results to show */
+  max?: number;
+
+  /** score threshold */
+  threshold?: number;
+
+}
+
+const props = Astro.props;
+
+---
 <script>
 
-import { type CollectionSearchResult, Search } from '@trebco/astro-collection-search';
+import { type CollectionSearchResult, Search } from 'astro-collection-search';
 import '../search-component.css';
+import { undefined } from 'astro:schema';
 
 document.addEventListener('DOMContentLoaded', () => {
 
   const component = document.querySelector('.search-component') as HTMLElement;
+  const max = component.dataset.max ? Number(component.dataset.max) : 0;
+  const threshold = component.dataset.threshold ? Number(component.dataset.threshold) : 0;
+
   const input = component.querySelector('.query') as HTMLInputElement;
   const results = component.querySelector('.results') as HTMLElement;
   const template = component.querySelector('.result-template') as HTMLTemplateElement;
@@ -15,7 +39,7 @@ document.addEventListener('DOMContentLoaded', () => {
    * construct link from search result.
    */
   const CreateLink = (result: CollectionSearchResult) => {
-    return '/' + result.collection + '/' + result.file.replace(/\.mdx{0,1}$/, '');
+    return ('/' + result.collection + '/' + result.file.replace(/\.mdx{0,1}$/, '')).toLowerCase();
   };
 
   /** 
@@ -43,10 +67,19 @@ document.addEventListener('DOMContentLoaded', () => {
    * create list of results, using template.
    */
   const PopulateResults = (list: CollectionSearchResult[]) => {
+
+    if (threshold) {
+      list = list.filter(test => test.score >= threshold);
+    }
+    if (max) {
+      list = list.slice(0, max);
+    }
+
     if (!list.length) {
       results.textContent = 'Your search returned no results.';
     }
     else {
+
       results.textContent = '';
       results.append(...list.map(result => {
         const clone = template.content.cloneNode(true) as HTMLElement;
@@ -114,15 +147,17 @@ document.addEventListener('DOMContentLoaded', () => {
 
 </script>
 
-<div class="search-component">
+<div class="search-component" data-max=`${props.max}` data-threshold=`${props.threshold}`>
 
-  <p class="note">
-    Note: links in search results may not work. That's because we index
-    collections, not pages, and we don't necessarily know how your pages
-    are organized. We're just guessing that links are 
-    <code>collection/filename</code>. If they're not, you probably need
-    to change the <code>CreateLink</code> method in the search component.
-  </p>
+  {!props['hide-note'] &&
+    <p class="note">
+      Note: links in search results may not work. That's because we index
+      collections, not pages, and we don't necessarily know how your pages
+      are organized. We're just guessing that links are 
+      <code>collection/filename</code>. If they're not, you probably need
+      to change the <code>CreateLink</code> method in the search component.
+    </p>
+  }
 
   <!-- input -->
   <input class="query" placeholder="Search">

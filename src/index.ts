@@ -172,6 +172,9 @@ const RebuildSearchIndex = async (options: SearchIndexOptions = {}, logger: Astr
     });
 
     index.addAll(docs);
+
+    logger.info(`indexed ${docs.length} doc${docs.length === 1 ? '' : 's'}`);
+
     logger.info(`writing search index`);
 
     // for some reason minisearch doesn't serialize options, so we have

@@ -6,22 +6,34 @@ Collection search for Astro collections using the great [minisearch][1].
 ## What it does
 
 When you rebuild your site, it will build a search index from your collections. 
-Then you can call a `Search()` function from client-side script to do full-text 
+Then you can call a `Search` function from client-side script to do full-text 
 search.
 
 Searching happens in a worker, so it won't block the main thread.
 
-## Getting started
+## Example site
 
-1. Add with `npm` or `astro add`.
+Here's an example site based on the default Astro blog template:
 
-2. If you used npm, update your config file. `astro add` will do this for you.
+[TODO]
+
+## Install
+
+### Automatic installation
+
+Add with `npx astro add astro-collection-search`.
+
+### Manual installation
+
+1. Add with `npm add astro-collection-search`.
+
+2. Update your config file
 
 astro.config.mjs:
 ```ts
 
 // add import directive
-import collection_search from '@trebco/astro-collection-search';
+import collection_search from 'astro-collection-search';
 
 export default defineConfig({
 
@@ -30,13 +42,14 @@ export default defineConfig({
 
 }
 ```
+## Try it
 
-3. Add our example search component to one of your pages to try it.
+Add our example search component to one of your pages (or a new page):
 
 ```jsx
 ---
 
-import SearchComponent from '@trebco/astro-collection-search/example/vanilla';
+import SearchComponent from 'astro-collection-search/example/vanilla';
 
 ---
 
@@ -64,7 +77,7 @@ Add an entry in the `integrations` section in `astro.config.mjs`:
 ```ts
 
 // import 
-import collection_search from '@trebco/astro-collection-search';
+import collection_search from 'astro-collection-search';
 
 // ...
 
@@ -100,54 +113,44 @@ export default defineConfig({
 
 ## Using
 
-`Seach()` is a client-side function that will create the worker, load the 
+`Seach` is a client-side function that will create the worker, load the 
 index, and run the query. 
 
 You can use our example components ([vanilla js][3], [preact][4]) as a 
 starting point for integrating search into your site. Or just write script to
-call the `Search()` function. Remember that it runs client-side. 
+call the `Search` function. Remember that it runs client-side. 
 
-```jsx
----
+```ts
 
-import SearchComponent from '@trebco/astro-collection-search/example/vanilla';
+import { Search } from 'astro-collection-search/example/vanilla';
 
----
+const results = await Search(query);
 
-<html>
-  <head>
-    <title>Search page</title>
-  </head>
-  <body>
-
-    <!-- include on page -->
-    <SearchComponent />
-
-  </body>
-</html>
 ```
 
-For the preact version, you need a `client:only` directive to hyrdate and
-prevent server-side rendering:
+## Tuning
 
-```jsx
----
+You can pass [minisearch options][5] to the `Search()` method. The default options 
+are `{ prefix: true, fuzzy: .3 }`. However, because these options are passed to
+a worker, you cannot use functions as options.
 
-import SearchComponent from '@trebco/astro-collection-search/example/preact';
+## Filtering
 
----
+There's a minisearch option for filtering, but it requires a function so it 
+won't work here (see the last paragraph). You should filter the results after
+they're returned from the `Search()` function.
 
-<html>
-  <head>
-    <title>Search page</title>
-  </head>
-  <body>
+```ts
 
-    <!-- include on page -->
-    <SearchComponent client:only="preact"/>
+import { Search } from 'astro-collection-search';
 
-  </body>
-</html>
+const results = (await Search(query)).filter(result => {
+
+  // filter by collection and score
+  return (result.collection === 'blog' && result.score >= 5);
+  
+});
+
 ```
 
 ## TODO
@@ -179,3 +182,4 @@ MIT
 [2]: example/search-overlay.astro
 [3]: example/vanilla/search-component.astro
 [4]: example/preact/search-component.tsx
+[5]: https://github.com/lucaong/minisearch?tab=readme-ov-file#search-options

@@ -1,10 +1,10 @@
 {
-  "name": "@trebco/astro-collection-search",
+  "name": "astro-collection-search",
   "license": "MIT",
-  "version": "0.0.4",
+  "version": "0.0.6",
   "repository": {
     "type": "git",
-    "url": "git+https://github.com/trebco/astro-collection-search.git"
+    "url": "git+https://github.com/trebco/collection-search.git"
   },
   "exports": {
     ".": "./src/index.ts",
@@ -31,7 +31,7 @@
   },
   "description": "Collection search for Astro using minisearch",
   "bugs": {
-    "url": "https://github.com/trebco/astro-collection-search/issues"
+    "url": "https://github.com/trebco/collection-search/issues"
   },
-  "homepage": "https://github.com/trebco/astro-collection-search"
+  "homepage": "https://github.com/trebco/collection-search"
 }

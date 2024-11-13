@@ -1,5 +1,5 @@
 
-import { type CollectionSearchResult, Search } from '@trebco/astro-collection-search';
+import { type CollectionSearchResult, Search } from 'astro-collection-search';
 import { useState, useEffect } from 'preact/hooks';
 
 import "../search-component.css";
@@ -26,8 +26,8 @@ export function SearchComponent({headings=[], contents=[]}) {
   const [list, setList] = useState([]);
   const [query, setQuery] = useState('');
 
-  const CreateLink = (result: CollectionSearchResult): string => {
-    return '/' + result.collection + '/' + result.file.replace(/\.mdx{0,1}$/, '');
+  const CreateLink = (result: CollectionSearchResult) => {
+    return ('/' + result.collection + '/' + result.file.replace(/\.mdx{0,1}$/, '')).toLowerCase();
   };
 
   const HandleInput = async (event: KeyboardEvent): Promise<undefined> => {
