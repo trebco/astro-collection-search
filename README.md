@@ -1,7 +1,11 @@
 
-# Collection search
+# Astro collection search
 
-Collection search for Astro collections using the great [minisearch][1].
+Astro collection search provides real-time search for anything in your Astro 
+collections. It runs client-side (no server required) and runs in a worker
+so it won't block the main thread.
+
+Astro collection search is powered by the great [minisearch][1]. 
 
 ## What it does
 
@@ -68,7 +72,8 @@ import SearchComponent from 'astro-collection-search/example/vanilla';
 ```  
 
 That component is just an example. You can modify it or write your own
-search component.
+search component. The example component uses vanilla js. [Here's the source][3].
+There's also an [example using preact][4].
 
 ## Configuration
 
@@ -117,8 +122,8 @@ export default defineConfig({
 index, and run the query. 
 
 You can use our example components ([vanilla js][3], [preact][4]) as a 
-starting point for integrating search into your site. Or just write script to
-call the `Search` function. Remember that it runs client-side. 
+starting point for integrating search into your site. Or just write code
+that calls the `Search` function. Remember that it runs client-side. 
 
 ```ts
 
@@ -130,7 +135,7 @@ const results = await Search(query);
 
 ## Tuning
 
-You can pass [minisearch options][5] to the `Search()` method. The default options 
+You can pass [minisearch options][5] to the `Search` method. The default options 
 are `{ prefix: true, fuzzy: .3 }`. However, because these options are passed to
 a worker, you cannot use functions as options.
 
@@ -138,7 +143,7 @@ a worker, you cannot use functions as options.
 
 There's a minisearch option for filtering, but it requires a function so it 
 won't work here (see the last paragraph). You should filter the results after
-they're returned from the `Search()` function.
+they're returned from the `Search` function.
 
 ```ts
 
