@@ -1,0 +1,32 @@
+---
+import SearchComponent from 'astro-collection-search/example/vanilla';
+
+import BaseHead from '../components/BaseHead.astro';
+import Header from '../components/Header.astro';
+import Footer from '../components/Footer.astro';
+import { SITE_TITLE, SITE_DESCRIPTION } from '../consts';
+---
+
+<!doctype html>
+<html lang="en">
+	<head>
+		<BaseHead title={SITE_TITLE} description={SITE_DESCRIPTION} />
+	</head>
+	<body style="overflow-y: scroll">
+		<Header />
+		<main>
+			<h1>Search Blog Posts</h1>
+
+      <p>
+        This is the example search component. You can write your 
+        own search component that works just how you want.
+      </p>
+
+      <SearchComponent hide-note max={10} threshold={5}/>
+		</main>
+		<Footer />
+	</body>
+</html>
+
+
+
