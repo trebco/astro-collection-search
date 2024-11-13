@@ -182,4 +182,4 @@ MIT
 [3]: example/vanilla/search-component.astro
 [4]: example/preact/search-component.tsx
 [5]: https://github.com/lucaong/minisearch?tab=readme-ov-file#search-options
-[6]: [https://trebco.github.io/astro-collection-search/
+[6]: https://trebco.github.io/astro-collection-search/
