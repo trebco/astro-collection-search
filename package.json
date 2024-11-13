@@ -1,10 +1,10 @@
 {
   "name": "astro-collection-search",
   "license": "MIT",
-  "version": "0.0.7",
+  "version": "0.0.8",
   "repository": {
     "type": "git",
-    "url": "git+https://github.com/trebco/collection-search.git"
+    "url": "git+https://github.com/trebco/astro-collection-search.git"
   },
   "exports": {
     ".": "./src/index.ts",
@@ -13,7 +13,8 @@
     "./example/preact": "./example/preact/search-component.tsx"
   },
   "keywords": [
-    "astro-integration"
+    "astro-integration",
+    "utils"
   ],
   "dependencies": {
     "minisearch": "^7.1.0"
@@ -31,7 +32,7 @@
   },
   "description": "Collection search for Astro using minisearch",
   "bugs": {
-    "url": "https://github.com/trebco/collection-search/issues"
+    "url": "https://github.com/trebco/astro-collection-search/issues"
   },
-  "homepage": "https://github.com/trebco/collection-search"
+  "homepage": "https://github.com/trebco/astro-collection-search"
 }
