@@ -5,6 +5,8 @@ Astro collection search provides real-time search for anything in your Astro
 collections. It runs client-side (no server required) and runs in a worker
 so it won't block the main thread.
 
+[Visit the example site here!][6]
+
 Astro collection search is powered by the great [minisearch][1]. 
 
 ## What it does
@@ -12,14 +14,6 @@ Astro collection search is powered by the great [minisearch][1].
 When you rebuild your site, it will build a search index from your collections. 
 Then you can call a `Search` function from client-side script to do full-text 
 search.
-
-Searching happens in a worker, so it won't block the main thread.
-
-## Example site
-
-Here's an example site based on the default Astro blog template:
-
-[TODO]
 
 ## Install
 
@@ -188,3 +182,4 @@ MIT
 [3]: example/vanilla/search-component.astro
 [4]: example/preact/search-component.tsx
 [5]: https://github.com/lucaong/minisearch?tab=readme-ov-file#search-options
+[6]: [https://trebco.github.io/astro-collection-search/
