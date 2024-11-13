@@ -12,8 +12,7 @@ Astro collection search is powered by the great [minisearch][1].
 ## What it does
 
 When you rebuild your site, it will build a search index from your collections. 
-Then you can call a `Search` function from client-side script to do full-text 
-search.
+Then you can call a `Search` function from client-side script.
 
 ## Install
 
@@ -71,7 +70,31 @@ There's also an [example using preact][4].
 
 ## Configuration
 
-Add an entry in the `integrations` section in `astro.config.mjs`:
+By default, the integration will index every `.md` and `.mdx` file under
+`src/content`. It will index text in the page body, plus the `title` and 
+`description` fields in frontmatter.
+
+The configuration object passed to the integration can change these settings.
+
+```ts
+interface SearchIndexOptions {
+
+  /** 
+   * collection to index, or an array of collections (by name). defaults
+   * to everything in src/content.
+   */
+  collections?: string|string[];
+
+  /**
+   * fields to index. defaults to 'title' and 'description'. we always
+   * index the post body, plus whatever fields are specified.
+   */
+  fields?: string|string[];
+
+}
+```
+
+Use that in `astro.config.mjs:
 
 ```ts
 
@@ -87,19 +110,8 @@ export default defineConfig({
 
   integrations: [
     collection_search({
-
-      // optionally specify which collection or 
-      // collections to index. defaults to everything
-      // under `src/content`.
-
       collections: 'blog'
-
-      // optionally specify which frontmatter fields to 
-      // index (in addition to the text body). defaults
-      // to `title` and `description`.
-
       fields: ['title', 'description', 'keywords']
-
     }),
 
     // ...
@@ -127,12 +139,6 @@ const results = await Search(query);
 
 ```
 
-## Tuning
-
-You can pass [minisearch options][5] to the `Search` method. The default options 
-are `{ prefix: true, fuzzy: .3 }`. However, because these options are passed to
-a worker, you cannot use functions as options.
-
 ## Filtering
 
 There's a minisearch option for filtering, but it requires a function so it 
@@ -152,6 +158,19 @@ const results = (await Search(query)).filter(result => {
 
 ```
 
+## Tuning
+
+You can pass [minisearch options][5] to the `Search` method. The default options 
+are `{ prefix: true, fuzzy: .3 }`. However, because these options are passed to
+a worker, you cannot use functions as options.
+
+## Indexing and hot reloading
+
+Indexing happens on the `config:done` hook, so it won't update automatically 
+in dev/hot reload mode. You need to rebuild your site to rebuild the index. 
+
+In dev mode, you can do that by re-saving your `astro.config.mjs` file.
+
 ## TODO
 
 ### Multiple indexes
@@ -167,11 +186,6 @@ For both of these issues you can filter search results and just show the
 ones appropriate to the current locale/desired collection. But multiple indexes
 might make this cleaner and more efficient.
 
-## Note on indexing
-
-Indexing happens on the `config:done` hook, so it won't update to
-changes in dev/hot reload mode. You need to rebuild your site to 
-trigger a re-index.
 
 ## License
 
