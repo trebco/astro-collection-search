@@ -27,7 +27,9 @@ export function SearchComponent({headings=[], contents=[]}) {
   const [query, setQuery] = useState('');
 
   const CreateLink = (result: CollectionSearchResult) => {
-    return ('/' + result.collection + '/' + result.file.replace(/\.mdx{0,1}$/, '')).toLowerCase();
+    let base = import.meta.env.BASE_URL || '/';
+    if (!base.endsWith('/')) { base += '/'; }
+    return (base + result.collection + '/' + result.file.replace(/\.mdx{0,1}$/, '')).toLowerCase();
   };
 
   const HandleInput = async (event: KeyboardEvent): Promise<undefined> => {

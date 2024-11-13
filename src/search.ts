@@ -82,7 +82,12 @@ export const Search = (query: string, options: Partial<ExtendedSearchOptions> = 
   let base_uri: string|undefined = options.base_uri;
 
   if (!base_uri && typeof document !== 'undefined') {
-    base_uri = new URL('/', document.baseURI).toString();
+
+    let base: string = import.meta.env.BASE_URL || '/';
+    if (!base.endsWith('/')) { base += '/'; }
+
+    base_uri = new URL(base, document.baseURI).toString();
+
   }
 
   options = { 
@@ -100,7 +105,12 @@ export const Search = (query: string, options: Partial<ExtendedSearchOptions> = 
 
   if (!worker) {
 
-    worker = new Worker(new URL(`${constants.artifacts_directory}/${constants.worker_name}`, options.base_uri || ''));
+    const parts = [
+      constants.artifacts_directory,
+      constants.worker_name,
+    ];
+
+    worker = new Worker(new URL(parts.join('/'), options.base_uri || ''));
     worker.onmessage = (event: MessageEvent<ResponseMessage>) => {
       if (typeof event.data === 'object') {
         switch (event.data.type) {
