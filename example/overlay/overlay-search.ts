@@ -18,6 +18,9 @@ export interface SearchOptions {
   /** text to show when there are no results (but we have a query) */
   no_results_text: string;
 
+  /** placeholder for the input box */
+  input_placeholder: string;
+
 }
 
 /**
@@ -33,6 +36,7 @@ const default_options: SearchOptions = {
     return `Results from ${collection}:`;
   },
   no_results_text: 'Your search returned no results',
+  input_placeholder: 'Search',
 };
 
 /**
@@ -93,6 +97,10 @@ class SearchDialog {
     this.template = dialog.querySelector('.result-template') as HTMLTemplateElement;
     this.clear_button = dialog.querySelector('.clear-query') as HTMLButtonElement;
     this.group_template = dialog.querySelector('.result-group-header-template') as HTMLTemplateElement;
+
+    // --- update content ------------------------------------------------------
+
+    this.input.placeholder = options.input_placeholder;
 
     // --- event handlers ------------------------------------------------------
 
