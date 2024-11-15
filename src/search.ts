@@ -67,6 +67,72 @@ const default_options: SearchOptions = {
 };
 
 /**
+ * splitting out init so we can optionally warm start.
+ */
+const InitWorker = (base_uri?: string) => {
+
+  if (worker) {
+    return;
+  }
+
+  if (!base_uri && typeof document !== 'undefined') {
+
+    let base: string = import.meta.env.BASE_URL || '/';
+    if (!base.endsWith('/')) { base += '/'; }
+
+    base_uri = new URL(base, document.baseURI).toString();
+  }
+
+  const parts = [
+    constants.artifacts_directory,
+    constants.worker_name,
+  ];
+
+  worker = new Worker(new URL(parts.join('/'), base_uri || ''));
+  worker.onmessage = (event: MessageEvent<ResponseMessage>) => {
+    if (typeof event.data === 'object') {
+      switch (event.data.type) {
+        case 'search-error':
+          {
+            const resolver = transactions.get(event.data.transaction);
+            if (resolver) {
+              transactions.delete(event.data.transaction);
+              resolver.reject(event.data.message);
+            }
+          }
+          break;
+
+        case 'search-results':
+          {
+            const resolver = transactions.get(event.data.transaction);
+            if (resolver) {
+              transactions.delete(event.data.transaction);
+              resolver.resolve(event.data.list);
+            }
+          }
+          break;
+      }
+    }
+  };
+
+  worker.postMessage({
+    type: 'init',
+    base_uri,
+  });
+
+};
+
+/**
+ * optionally initialize the worker ahead of searching, to reduce delay
+ * on the first search. 
+ * 
+ * @param base_uri 
+ */
+export const WarmStart = (base_uri?: string) => {
+  InitWorker(base_uri);
+};
+
+/**
  * search options extends minisearch search options, so you can pass
  * any valid minisearch option; however because we send these options to
  * a worker, you cannot pass functions as option values. 
@@ -79,70 +145,12 @@ const default_options: SearchOptions = {
  */
 export const Search = (query: string, options: Partial<ExtendedSearchOptions> = {}) => {
 
-  let base_uri: string|undefined = options.base_uri;
-
-  if (!base_uri && typeof document !== 'undefined') {
-
-    let base: string = import.meta.env.BASE_URL || '/';
-    if (!base.endsWith('/')) { base += '/'; }
-
-    base_uri = new URL(base, document.baseURI).toString();
-
-  }
+  InitWorker(options.base_uri);
 
   options = { 
     ...default_options, 
-    base_uri,
     ...options 
   };
-
-  // we create the worker on demand. that might mean some additional delay
-  // in the first search. optionally we could always load it so it would warm
-  // start.
-  //
-  // assuming the worker and the index are both cached by the browser, startup
-  // time should be relatively short.
-
-  if (!worker) {
-
-    const parts = [
-      constants.artifacts_directory,
-      constants.worker_name,
-    ];
-
-    worker = new Worker(new URL(parts.join('/'), options.base_uri || ''));
-    worker.onmessage = (event: MessageEvent<ResponseMessage>) => {
-      if (typeof event.data === 'object') {
-        switch (event.data.type) {
-          case 'search-error':
-            {
-              const resolver = transactions.get(event.data.transaction);
-              if (resolver) {
-                transactions.delete(event.data.transaction);
-                resolver.reject(event.data.message);
-              }
-            }
-            break;
-
-          case 'search-results':
-            {
-              const resolver = transactions.get(event.data.transaction);
-              if (resolver) {
-                transactions.delete(event.data.transaction);
-                resolver.resolve(event.data.list);
-              }
-            }
-            break;
-        }
-      }
-    };
-
-    worker.postMessage({
-      type: 'init',
-      base_uri: options.base_uri,
-    });
-
-  }
 
   const transaction = txid++;
 

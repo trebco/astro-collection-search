@@ -21,11 +21,13 @@ const props = Astro.props;
 ---
 <script>
 
-import { type CollectionSearchResult, Search } from 'astro-collection-search';
+import { type CollectionSearchResult, Search, WarmStart } from 'astro-collection-search';
 import '../search-component.css';
 import { undefined } from 'astro:schema';
 
 document.addEventListener('DOMContentLoaded', () => {
+
+  WarmStart();
 
   const component = document.querySelector('.search-component') as HTMLElement;
   const max = component.dataset.max ? Number(component.dataset.max) : 0;

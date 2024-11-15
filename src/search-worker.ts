@@ -6,8 +6,10 @@ import * as constants from './constants';
 let index: minisearch|undefined;
 let base_uri = '';
 
-const Search = async (message: SearchQueryMessage) => {
-
+/**
+ * split init into a separate method so we can call it directly
+ */
+const Init = async () => {
   if (!index) {
     const response = await fetch(new URL(`${constants.artifacts_directory}/${constants.index_name}`, base_uri));
     if (response.ok) {
@@ -16,6 +18,13 @@ const Search = async (message: SearchQueryMessage) => {
         fields, storeFields
       });
     }
+  }
+};
+
+const Search = async (message: SearchQueryMessage) => {
+
+  if (!index) {
+    await Init();
   }
 
   if (!index) {
@@ -47,6 +56,7 @@ onmessage = (event: MessageEvent<WorkerMessage>) => {
 
       case 'init':
         base_uri = event.data.base_uri;
+        Init();
         return;
     }
   }

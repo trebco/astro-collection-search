@@ -7,7 +7,7 @@ import * as constants from './constants';
 import type { AstroIntegration, AstroIntegrationLogger } from 'astro';
 
 // reexport the search method and result type
-export { Search } from './search';
+export { Search, WarmStart } from './search';
 export type { CollectionSearchResult } from './search';
 
 /**

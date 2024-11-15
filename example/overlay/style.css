@@ -1,0 +1,164 @@
+
+dialog#overlay-search-dialog {
+  font-size: 1rem;
+  border-radius: 8px;
+  border: 1px solid color-mix(in srgb, CanvasText 50%, transparent);
+  margin: 0 auto;
+  top: 3em;
+  width: 40em;
+  max-width: 90%;
+  max-height: 80%;
+  height: 30em;
+  padding: 0;
+  overflow: hidden;
+  font-family: system-ui, -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, Oxygen, Ubuntu, Cantarell, 'Open Sans', 'Helvetica Neue', sans-serif;
+
+  --accent-color: LinkText;
+  --accent-text: #fff;
+  --background-color: color-mix(in srgb, CanvasText 7%, Canvas);
+  --control-border: 1px solid color-mix(in srgb, CanvasText 30%, transparent);
+  --focus-ring-color: -webkit-focus-ring-color;
+
+}
+
+dialog#overlay-search-dialog::backdrop {
+  background: CanvasText;
+  opacity: .4;
+}
+
+dialog#overlay-search-dialog .dialog-body {
+  display: grid;
+  grid-template-rows: auto 1fr auto;
+  position: relative;
+  height: 100%;
+  overflow: hidden;
+
+  background: var(--background-color);
+}
+
+dialog#overlay-search-dialog .search-controls {
+  padding: 1em;
+}
+
+dialog#overlay-search-dialog .composite-input {
+  font-size: 1.2rem;
+  padding: .5em;
+  border-radius: 3px;
+  border: var(--control-border);
+  display: flex;
+  flex-direction: row;
+  align-items: center;
+  gap: 1em;
+  background: Canvas;
+}
+
+dialog#overlay-search-dialog .composite-input:focus-within {
+  outline-style: solid;
+  outline-width: 2px;
+  outline-color: var(--focus-ring-color, initial);
+}
+
+dialog#overlay-search-dialog button.clear-query {
+  font-size: inherit;
+  font-family: inherit;
+  background: transparent;
+  border: none;
+  display: flex;
+}
+
+dialog#overlay-search-dialog .composite-input svg {
+  opacity: .5;
+  font-size: 1.5rem;
+}
+
+dialog#overlay-search-dialog .search-results {
+  /*
+  border-top: 1px solid color-mix(in srgb, CanvasText 30%, transparent);
+  border-bottom: 1px solid color-mix(in srgb, CanvasText 30%, transparent);
+  */
+  overflow-y: scroll;
+  padding: 0 1em 1em 1em;
+}
+
+dialog#overlay-search-dialog .search-results.no-results {
+  text-align: center;
+}
+
+dialog#overlay-search-dialog .result-group-header {
+  font-weight: 600;
+  font-size: .9em;
+  margin-bottom: .5em;
+  padding-left: .25em;
+  position: sticky; 
+  top: 0px;
+  background: var(--background-color);
+  padding: .5em .25em;
+}
+
+dialog#overlay-search-dialog .search-result {
+  background: Canvas;
+  border-radius: 3px;
+  margin-bottom: .5em;
+  padding: .4em 1em;
+  line-height: 1.6;
+
+  font-family: inherit;
+  font-size: inherit;
+  display: block;
+  width: 100%;
+  border: none;
+  text-align: left;
+  outline: none;    
+
+  /* FIXME for dark mode */
+  box-shadow:
+    0 1px 1px rgba(0, 0, 0, 0.2),
+    0 2px 0 0 rgba(255, 255, 255, 0.7) inset;
+
+}
+
+dialog#overlay-search-dialog .search-result .title {
+  color: var(--accent-color);
+  pointer-events: none;
+  font-weight: 500;
+  text-overflow: ellipsis;
+  overflow: hidden;
+}
+
+dialog#overlay-search-dialog .search-result .description {
+  font-size: .9em;
+  pointer-events: none;
+  white-space: nowrap;
+  text-overflow: ellipsis;
+  overflow: hidden;
+}
+
+dialog#overlay-search-dialog .search-result.active {
+  background: var(--accent-color);
+  color: var(--accent-text);
+}
+
+dialog#overlay-search-dialog .search-result.active .title {
+  color: var(--accent-text);
+}
+
+dialog#overlay-search-dialog input {
+  padding: 0;
+  border: none;
+  font-family: inherit;
+  font-size: inherit;
+  outline: none;
+  width: 100%;
+}
+
+dialog#overlay-search-dialog .dialog-footer {
+  padding: .4em 1.5em;
+  font-size: .9em;
+}
+
+dialog#overlay-search-dialog kbd {
+
+  font-size: .85em;
+  font-family: monospace;
+
+}
