@@ -164,6 +164,11 @@ You can pass [minisearch options][5] to the `Search` method. The default options
 are `{ prefix: true, fuzzy: .3 }`. However, because these options are passed to
 a worker, you cannot use functions as options.
 
+## New fancy search interface
+
+There's a new fancy search dialog on our example site. To see the source
+and learn more about it see the [README in the example directory][7].
+
 ## Indexing and hot reloading
 
 Indexing happens on the `config:done` hook, so it won't update automatically 
@@ -197,3 +202,4 @@ MIT
 [4]: example/preact/search-component.tsx
 [5]: https://github.com/lucaong/minisearch?tab=readme-ov-file#search-options
 [6]: https://trebco.github.io/astro-collection-search/
+[7]: example/overlay/
