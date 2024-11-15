@@ -122,14 +122,42 @@ class SearchDialog {
     });
 
     // navigate on result click
+    // (switched to anchor tags)
 
+    // we want to close the dialog immediately before closing
+    // the page. if we don't, the dialog will be visible if you
+    // go back via history or back button, which is bad ux.
+
+    // we don't want to close it immediately, though, as there
+    // might be a slight delay loading the target page and it 
+    // looks janky.
+
+    document.addEventListener('pagehide', () => {
+      this.dialog.close();
+    });
+
+    /*
     this.results.addEventListener('click', event => {
       if (event.target instanceof HTMLElement) {
         if (event.target.dataset.link) {
+
+          // we want to close the dialog immediately before closing
+          // the page. if we don't, the dialog will be visible if you
+          // go back via history or back button, which is bad ux.
+
+          // we don't want to close it immediately, though, as there
+          // might be a slight delay loading the target page and it 
+          // looks janky.
+
+          document.addEventListener('pagehide', () => {
+            this.dialog.close();
+          });
+
           document.location = event.target.dataset.link;
         }
       }
     });
+    */
 
     // store scroll position
 
@@ -166,6 +194,7 @@ class SearchDialog {
       this.input.value = '';
       this.results.textContent = '';
       this.StoreSessionData();
+      this.input.focus();
     });
 
     this.Init();
@@ -285,10 +314,11 @@ class SearchDialog {
 
           this.results.append(...list.map(result => {
             const clone = this.template.content.cloneNode(true) as HTMLElement;
+            const link = this.options.create_link(result);
             this.SetContent(clone, {
               title: result.frontmatter.title || 'No title',
               description: result.frontmatter.description || 'No description',
-              result: { attributes: { 'data-link': this.options.create_link(result), 'data-index': (index++).toString() }},
+              result: { attributes: { 'data-link': link, 'data-index': (index++).toString(), href: link }},
             });
             return clone;
           }));
