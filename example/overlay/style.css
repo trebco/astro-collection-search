@@ -81,7 +81,7 @@ dialog#overlay-search-dialog .search-results {
   padding: 0 1em 1em 1em;
 }
 
-dialog#overlay-search-dialog .search-results.no-results {
+dialog#overlay-search-dialog .search-results-list.no-results {
   text-align: center;
 }
 

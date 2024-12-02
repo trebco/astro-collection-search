@@ -21,9 +21,19 @@ import './style.css';
       </div>
 
     </div>
+
     <div class="search-results">
-      <!-- ... -->
+
+      <!-- show this content if there are no results and no query -->
+      <div class="default-content">
+        <slot name="default-content"></slot>
+      </div>
+
+      <!-- list of results -->
+      <div class="search-results-list"></div>
+
     </div>
+
     <div class="dialog-footer">
 
       <!-- FIXME: parameterize for i18n -->

@@ -94,6 +94,7 @@ class SearchDialog {
   public group_template: HTMLTemplateElement;
   public active_node?: HTMLElement;
   public selected_index = -1;
+  public default_content: HTMLElement;
 
   constructor(public dialog: HTMLDialogElement, public options: SearchOptions) {
 
@@ -105,10 +106,11 @@ class SearchDialog {
     // --- collect nodes -------------------------------------------------------
 
     this.input = dialog.querySelector('.query') as HTMLInputElement;
-    this.results = dialog.querySelector('.search-results') as HTMLElement;
+    this.results = dialog.querySelector('.search-results-list') as HTMLElement;
     this.template = dialog.querySelector('.result-template') as HTMLTemplateElement;
     this.clear_button = dialog.querySelector('.clear-query') as HTMLButtonElement;
     this.group_template = dialog.querySelector('.result-group-header-template') as HTMLTemplateElement;
+    this.default_content = dialog.querySelector('.default-content') as HTMLElement;
 
     // --- update content ------------------------------------------------------
 
@@ -204,6 +206,7 @@ class SearchDialog {
       else {
         this.results.textContent = '';
         this.SetResultsState('no-query');
+        this.default_content.style.display = "block";
         this.StoreSessionData();
       }
     });
@@ -293,6 +296,9 @@ class SearchDialog {
    * create list of results, using template.
    */
   public PopulateResults(list: CollectionSearchResult[]) {
+
+      // this should come back if you clear the query? not sure
+      this.default_content.style.display = "none";
 
       if (this.options.threshold) {
         const threshold = this.options.threshold;
