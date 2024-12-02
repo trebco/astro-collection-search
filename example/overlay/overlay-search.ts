@@ -1,5 +1,5 @@
 
-import { type CollectionSearchResult, Search, WarmStart } from '../../src';
+import { type CollectionSearchResult, type ExtendedSearchOptions, Search, WarmStart } from '../../src';
 
 export interface SearchOptions {
 
@@ -12,6 +12,15 @@ export interface SearchOptions {
   /** scrore threshold */
   threshold?: number;
 
+  /** method for filtering search results */
+  filter?: (result: CollectionSearchResult) => boolean;
+
+  /** optionally reformat the description */
+  format_description?: (result: CollectionSearchResult) => string;
+
+  /** optionally reformat the title */
+  format_title?: (result: CollectionSearchResult) => string;
+
   /** create a group header from a collection name */
   group_header: (collection: string) => string;
 
@@ -20,6 +29,9 @@ export interface SearchOptions {
 
   /** placeholder for the input box */
   input_placeholder: string;
+
+  /** options to pass to the Search method. use this to set minisearch options. */
+  search_options?: Partial<ExtendedSearchOptions>;
 
 }
 
@@ -184,7 +196,7 @@ class SearchDialog {
     this.input.addEventListener('input', async () => {
       const query = this.input.value.trim();
       if (query) {
-        const list = await Search(query);
+        const list = await Search(query, options.search_options);
         this.PopulateResults(list);
         this.results.scrollTop = 0;
         this.StoreSessionData(query, '', list);
@@ -287,6 +299,11 @@ class SearchDialog {
         list = list.filter(test => test.score >= threshold);
       }
 
+      if (this.options.filter) {
+        const filter = this.options.filter;
+        list = list.filter(test => filter(test));
+      }
+
       if (this.options.max) {
         list = list.slice(0, this.options.max);
       }
@@ -323,9 +340,16 @@ class SearchDialog {
           this.results.append(...list.map(result => {
             const clone = this.template.content.cloneNode(true) as HTMLElement;
             const link = this.options.create_link(result);
+
+            const description = this.options.format_description ? 
+              this.options.format_description(result) : (result.frontmatter.description || 'No description');
+
+            const title = this.options.format_title ? 
+              this.options.format_title(result) : (result.frontmatter.title || 'No title');
+
             this.SetContent(clone, {
-              title: result.frontmatter.title || 'No title',
-              description: result.frontmatter.description || 'No description',
+              title,
+              description,
               result: { attributes: { 'data-link': link, 'data-index': (index++).toString(), href: link }},
             });
             return clone;

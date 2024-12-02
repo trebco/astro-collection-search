@@ -58,7 +58,7 @@ or link to open search.
 import { OpenSearch, InitSearch } from 
   'astro-collection-search/example/overlay/overlay-search.ts';
   
-// call init to set search options. 
+// call init to set search options.
 InitSearch({
   max: 12, 
 });
@@ -70,6 +70,48 @@ document.querySelector('.open-search-dialog')?.addEventListener('click', () => O
 </script>
 
 ```
+
+## Configuration
+
+The `InitSearch` method takes a number of parameters you can use to configure
+search and the search interface:
+
+```ts
+export interface SearchOptions {
+
+  /** create a link from a search result */
+  create_link: (result: CollectionSearchResult) => string;
+
+  /** max results to show for any search */
+  max?: number;
+
+  /** scrore threshold */
+  threshold?: number;
+
+  /** method for filtering search results */
+  filter?: (result: CollectionSearchResult) => boolean;
+
+  /** optionally reformat the description */
+  format_description?: (result: CollectionSearchResult) => string;
+
+  /** optionally reformat the title */
+  format_title?: (result: CollectionSearchResult) => string;
+
+  /** create a group header from a collection name */
+  group_header: (collection: string) => string;
+
+  /** text to show when there are no results (but we have a query) */
+  no_results_text: string;
+
+  /** placeholder for the input box */
+  input_placeholder: string;
+
+  /** options to pass to the Search method. use this to set minisearch options. */
+  search_options?: Partial<ExtendedSearchOptions>;
+
+}
+```
+
 
 ## Issue with page scrolling 
 
