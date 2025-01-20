@@ -101,7 +101,13 @@ class SearchDialog {
     // push down to body. as long as body doesn't scroll, we won't 
     // get page scrolling when the dialog is open. 
 
-    document.body.append(dialog);
+    // can we put under html? does that solve the scroll problem?
+    // would be preferable. (the answer is no; if the dialog is under 
+    // <html/> it still scrolls the body)
+
+    if (document.body.parentElement) {
+      document.body.parentElement.append(dialog);
+    }
 
     // --- collect nodes -------------------------------------------------------
 
