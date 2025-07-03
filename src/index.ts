@@ -78,6 +78,8 @@ async function *ListFiles(start: string): AsyncGenerator<string, undefined, void
  * not sure how reliable or stable that is. seems to be the way astro 
  * expects it, though.
  * 
+ * FIXME: you can change this in the config, we need to read that
+ * 
  * @param collection 
  */
 const ReadCollection = async (collection: string, fields: string[], logger: AstroIntegrationLogger) => {
