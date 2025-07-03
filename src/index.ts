@@ -3,6 +3,7 @@ import minisearch from 'minisearch';
 import fs from 'fs/promises';
 import path from 'path';
 import * as constants from './constants';
+import * as jsyaml from 'js-yaml';
 
 import type { AstroIntegration, AstroIntegrationLogger } from 'astro';
 
@@ -78,8 +79,6 @@ async function *ListFiles(start: string): AsyncGenerator<string, undefined, void
  * not sure how reliable or stable that is. seems to be the way astro 
  * expects it, though.
  * 
- * FIXME: you can change this in the config, we need to read that
- * 
  * @param collection 
  */
 const ReadCollection = async (collection: string, fields: string[], logger: AstroIntegrationLogger) => {
@@ -88,6 +87,9 @@ const ReadCollection = async (collection: string, fields: string[], logger: Astr
 
   const docs: Doc[] = [];
   const dir = path.join('src', 'content', collection);
+
+  // FIXME: I think the YAML parser will throw so we should 
+  // catch on a document-by-document basis, and report errors
 
   try {
 
@@ -99,6 +101,8 @@ const ReadCollection = async (collection: string, fields: string[], logger: Astr
         const contents = await fs.readFile(entry, { encoding: 'utf-8' });
         let [_, fm, body] = contents.split('---\n');
 
+        const yaml = jsyaml.load(fm);
+
         const doc: Doc = {
           body,
           collection,
@@ -106,21 +110,31 @@ const ReadCollection = async (collection: string, fields: string[], logger: Astr
         }; 
         
         const frontmatter: Record<string, string> = {};
-        for (const line of fm.split(/\n/)) {
-          let [key, value] = line.split(':', 2).map(value => value.trim());
 
-          // remove quotes. minisearch doesn't care but when we show 
-          // these values we don't want them to be quoted
+        if (yaml && typeof yaml === 'object') {
+          for (const [key, value] of Object.entries(yaml)) {
 
-          if (/^['"].*['"]$/.test(value)) { 
-            value = value.substring(1, value.length - 1); 
+            // what to do with non-string values? for numbers it
+            // makes sense to convert but what about arrays or objects?
+
+            if (value === null) {
+              frontmatter[key] = '';
+            }
+            else {
+              frontmatter[key] = value.toString();
+            }
+
+            // since we're using yaml we can assume quotes parsed properly
+            // and any quotes left over are intentional
+            
+            if (fields.includes(key)) {
+              doc[key] = frontmatter[key];
+            }
+
           }
-
-          frontmatter[key] = value;
-
-          if (fields.includes(key)) {
-            doc[key] = value;
-          }
+        }
+        else if (yaml) {
+          console.info("YAML ERROR");
         }
 
         doc.frontmatter = frontmatter;
