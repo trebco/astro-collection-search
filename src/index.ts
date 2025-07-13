@@ -98,7 +98,10 @@ const ReadCollection = async (collection: string, fields: string[], logger: Astr
       if (/\.mdx{0,1}$/i.test(entry)) {
         const file = path.relative(dir, entry);
 
-        const contents = await fs.readFile(entry, { encoding: 'utf-8' });
+        let contents = await fs.readFile(entry, { encoding: 'utf-8' });
+        if (!contents.endsWith('\n')) {
+          contents += '\n';
+        }
         let [_, fm, body] = contents.split('---\n');
 
         const yaml = jsyaml.load(fm);
